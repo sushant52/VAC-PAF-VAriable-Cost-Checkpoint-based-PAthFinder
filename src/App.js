@@ -1,23 +1,39 @@
 import React from 'react';
 import Gridin from './Grid';
 
+var idx_manager = {
+    Start : 0,
+    End : 1,
+    Gray : 2,
+    White : 3
+}
+
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.selector = React.createRef();
-        this.state ={
+        this.state =
+        {
             pos1 : 0,
             pos2 : 0,
             pos3 : 0,
             pos4 : 0,
             start : false,
             end : false,
+            value : "Gray",
+            valuelist : [
+                {Start : [1,[0,255,0]]},
+                {End : [1,[255,0,0]]},
+                {Gray : [0,[220,220,220]]},
+                {White : [1,[250,250,250]]}
+            ]
         }
         this.onStart = this.onStart.bind(this);
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     onMouseDown(e) {
@@ -26,7 +42,6 @@ class App extends React.Component {
         this.onStart(e);
         document.addEventListener('mousemove', this.onMouseMove);
         document.addEventListener('mouseup', this.onMouseUp);
-        e.preventDefault();
     }
 
     onStart(e) {
@@ -38,7 +53,6 @@ class App extends React.Component {
             pos3 : e.clientX,
             pos4 : e.clientY
         });
-        e.preventDefault();
     }
 
     onMouseMove(e) {
@@ -72,6 +86,12 @@ class App extends React.Component {
         })
     }
 
+    handleChange(e) {
+        e.stopPropagation();
+        this.setState({value : e.target.value})
+        e.preventDefault();
+    }
+
     render() {
         return(
             <div>
@@ -79,7 +99,7 @@ class App extends React.Component {
                     <Gridin 
                         start = {this.state.start}
                         end = {this.state.end}
-                        handleClick = {this.handleClick}
+                        current = {this.state.valuelist[idx_manager[(this.state.value)] ]}
                     />
                 </div>
                 <div className='override'
@@ -89,7 +109,7 @@ class App extends React.Component {
                         position : 'absolute',
                         left : this.state.pos1,
                         top : this.state.pos2,
-                        opacity : 0.2,
+                        opacity : 0.7,
                         height : "300px",
                         width : "100px",
                         "backgroundColor" : "purple",
@@ -134,6 +154,26 @@ class App extends React.Component {
                     >End
                     </button>
                     <br/>
+                    <select 
+                    value={this.state.value}
+                    onChange = {this.handleChange}
+                    
+                    style={{
+                        position : 'relative',
+                        top : "20px",
+                        display : 'block',
+                        width : '75px',
+                        marginLeft : 'auto',
+                        marginRight : 'auto'
+                    }}
+                    >
+                        <option>Gray</option>
+                        <option>White</option>
+                        <option>Start</option>
+                        <option>End</option>
+                    </select>
+                    <br/>
+                    <div> {this.state.value} </div>
                 </div>
             </div>
         )

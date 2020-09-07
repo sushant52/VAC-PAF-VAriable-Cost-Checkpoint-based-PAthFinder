@@ -113,19 +113,8 @@ class Gridin extends React.Component {
                 return;
             let cur_grid = grid[x][y];
             prev = grid[x][y];
-            if(type===-1) {
-                p.fill(250);
-                p.rect(y*size,x*size,size,size);
-                cur_grid.cost = 1;
-            }
-
-            if(type===0) {
-                p.fill(220);
-                p.rect(y*size,x*size,size,size);
-                cur_grid.cost = 0;
-                
-            }
-            if(type===1) {
+            let cur_key = Object.keys(this.props.current)[0]
+            if(cur_key == "Start") {
                 p.fill(250);
                 p.rect(start.y*size,start.x*size,size,size);
                 start.cost = 1;
@@ -133,13 +122,18 @@ class Gridin extends React.Component {
                 p.fill(0,255,0);
                 p.rect(y*size,x*size,size,size);
             }
-            if(type===2) {
+            else if(cur_key == "End") {
                 p.fill(250);
                 p.rect(end.y*size,end.x*size,size,size);
                 end.cost = 1;
                 end = cur_grid;
                 p.fill(255,0,0);
                 p.rect(y*size,x*size,size,size);
+            }
+            else {
+                p.fill(...this.props.current[cur_key][1]);
+                p.rect(y*size,x*size,size,size);
+                cur_grid.cost = this.props.current[cur_key][0];
             }
         }
 
@@ -150,27 +144,32 @@ class Gridin extends React.Component {
             let y = Math.floor(e.clientX/size);
             if(Algo.out_of_bounds([x,y], yl-1,xl-1))
                 return;
-            if((x==start.x && y==start.y))
-                type = 1;
-            else if((x==end.x && y==end.y))
-                type = 2;
-            else if(grid[x][y].cost == 1)
-                type = 0;
-            else
-                type = -1;
-            if((x==start.x && y==start.y) || (x==end.x && y==end.y))
-                return;
             let cur_grid = grid[x][y];
             prev = grid[x][y];
-            if(type===-1) {
+            if((x==start.x && y==start.y) || (x==end.x && y==end.y))
+                return;
+            
+            let cur_key = Object.keys(this.props.current)[0]
+            if(cur_key == "Start") {
                 p.fill(250);
+                p.rect(start.y*size,start.x*size,size,size);
+                start.cost = 1;
+                start = cur_grid;
+                p.fill(0,255,0);
                 p.rect(y*size,x*size,size,size);
-                cur_grid.cost = 1;
             }
-            if(type===0) {
-                p.fill(220);
+            else if(cur_key == "End") {
+                p.fill(250);
+                p.rect(end.y*size,end.x*size,size,size);
+                end.cost = 1;
+                end = cur_grid;
+                p.fill(255,0,0);
                 p.rect(y*size,x*size,size,size);
-                cur_grid.cost = 0;
+            }
+            else {
+                p.fill(...this.props.current[cur_key][1]);
+                p.rect(y*size,x*size,size,size);
+                cur_grid.cost = this.props.current[cur_key][0];
             }
         }
     }
@@ -187,7 +186,6 @@ class Gridin extends React.Component {
     }
 
     render() {
-        
         return(
             <div ref={this.myref} className='no-bord' >
 
@@ -197,3 +195,12 @@ class Gridin extends React.Component {
 }
 
 export default Gridin ;
+
+// if((x==start.x && y==start.y))
+//                 type = 1;
+//             else if((x==end.x && y==end.y))
+//                 type = 2;
+//             else if(grid[x][y].cost == 1)
+//                 type = 0;
+//             else
+//                 type = -1;
