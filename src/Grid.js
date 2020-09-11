@@ -6,7 +6,7 @@ import Algo from './Astar';
 
 var height = window.innerHeight;
 var width = window.innerWidth;
-var size = 5;
+var size = 20;
 var grid = [];
 var start;
 var end;

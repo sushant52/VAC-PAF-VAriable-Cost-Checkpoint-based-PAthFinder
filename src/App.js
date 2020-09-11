@@ -1,5 +1,6 @@
 import React from 'react';
 import Gridin from './Grid';
+import Input from './Input';
 
 var idx_manager = {
     Start : 0,
@@ -7,6 +8,7 @@ var idx_manager = {
     Gray : 2,
     White : 3
 }
+var next_idx = 4;
 
 class App extends React.Component {
     constructor(props) {
@@ -20,6 +22,7 @@ class App extends React.Component {
             pos4 : 0,
             start : false,
             end : false,
+            newadd : false,
             value : "Gray",
             valuelist : [
                 {Start : [1,[0,255,0]]},
@@ -34,6 +37,7 @@ class App extends React.Component {
         this.onMouseUp = this.onMouseUp.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.addBlock = this.addBlock.bind(this);
     }
 
     onMouseDown(e) {
@@ -81,8 +85,10 @@ class App extends React.Component {
         this.setState( (prevState)=> {
             if(name==='start')
                 return {start : !prevState.start}
-            else
+            if(name==='end')
                 return {end : !prevState.end}
+            if(name==='addnew')
+                return {newadd : !prevState.newadd}
         })
     }
 
@@ -92,9 +98,35 @@ class App extends React.Component {
         e.preventDefault();
     }
 
+    addBlock(toAdd,new_block) {
+        if(toAdd) {
+            idx_manager = {...idx_manager,[Object.keys(new_block)[0]] : next_idx}
+            let new_valuelist = 
+            this.setState(prevstate => {
+                let new_valuelist = prevstate.valuelist;
+                new_valuelist.push(new_block);
+                return(
+                {
+                    newadd : !prevstate.newadd,
+                    valuelist : new_valuelist
+                }
+            )})
+        }
+        else{
+            this.setState(prevstate => {return {newadd : !prevstate.newadd}})
+        }
+        next_idx++;
+    }
+
     render() {
+        let added_component = null
+        if(this.state.newadd) {
+            added_component = (<Input block_list={Object.keys(idx_manager)} block_add={this.addBlock} />)
+        }
+
         return(
             <div>
+                <div>{added_component}</div>
                 <div style={{zIndex :0}}>
                     <Gridin 
                         start = {this.state.start}
@@ -119,61 +151,33 @@ class App extends React.Component {
                     <button 
                         name = 'start'
                         onClick = {this.handleClick}
-                        style={{
-                        display : 'block',
-                        top : '20px',
-                        position : 'relative',
-                        marginLeft : 'auto',
-                        marginRight : 'auto',
-                        width : '75px',
-                        height : '50px',
-                        backgroundColor : "black",
-                        textAlign : "center",
-                        borderRadius : "4px",
-                        color : "white"
-                    }}
+                        className = 'interface-button'
                     >Start
                     </button>
                     <br/>
                     <button 
                         name = 'end'
                         onClick = {this.handleClick}
-                        style={{
-                        display : 'block',
-                        position : 'relative',
-                        top : "20px",
-                        marginLeft : 'auto',
-                        marginRight : 'auto',
-                        width : '75px',
-                        height : '50px',
-                        backgroundColor : "black",
-                        textAlign : "center",
-                        borderRadius : "4px",
-                        color : "white"
-                    }}
+                        className = 'interface-button'
                     >End
                     </button>
                     <br/>
                     <select 
                     value={this.state.value}
                     onChange = {this.handleChange}
-                    
-                    style={{
-                        position : 'relative',
-                        top : "20px",
-                        display : 'block',
-                        width : '75px',
-                        marginLeft : 'auto',
-                        marginRight : 'auto'
-                    }}
+                    className = 'select-block'
                     >
-                        <option>Gray</option>
-                        <option>White</option>
-                        <option>Start</option>
-                        <option>End</option>
+                        {this.state.valuelist.map((block,idx) => {
+                            return(<option key={Object.keys(block)[0]}>{Object.keys(block)[0]}</option>)
+                        })}
                     </select>
                     <br/>
-                    <div> {this.state.value} </div>
+                    <button 
+                        name = 'addnew'
+                        onClick = {this.handleClick}
+                        className = 'interface-button'
+                    >Addnew
+                    </button>
                 </div>
             </div>
         )
