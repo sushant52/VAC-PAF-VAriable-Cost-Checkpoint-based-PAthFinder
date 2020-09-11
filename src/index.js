@@ -1,8 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Interface from './Interface';
-
-// import ScriptTag from 'react-script-tag';
+import './style.css';
 
 ReactDOM.render(  
     <div className='no-bord'>
