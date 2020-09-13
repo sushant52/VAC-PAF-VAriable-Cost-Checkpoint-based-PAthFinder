@@ -111,14 +111,15 @@ class App extends React.Component {
                     valuelist : new_valuelist
                 }
             )})
+            next_idx++;
         }
         else{
             this.setState(prevstate => {return {newadd : !prevstate.newadd}})
         }
-        next_idx++;
     }
 
     render() {
+        console.log(idx_manager)
         let added_component = null
         if(this.state.newadd) {
             added_component = (<Input block_list={Object.keys(idx_manager)} block_add={this.addBlock} />)
@@ -126,8 +127,7 @@ class App extends React.Component {
 
         return(
             <div>
-                <div>{added_component}</div>
-                <div style={{zIndex :0}}>
+                <div style={{zIndex :-1}}>
                     <Gridin 
                         start = {this.state.start}
                         end = {this.state.end}
@@ -179,6 +179,7 @@ class App extends React.Component {
                     >Addnew
                     </button>
                 </div>
+                <div>{added_component}</div>
             </div>
         )
     }    

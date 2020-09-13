@@ -4,13 +4,14 @@ class Input extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            colour : "#0707B0",
+            colour : "#000000",
             name : '',
             cost : '0',
             error : false
         }
         this.handleClick = this.handleClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.skip = this.skip.bind(this);
     }
 
     onMouseDown(e) {
@@ -18,12 +19,21 @@ class Input extends React.Component {
     }
 
     handleClick(e) {
+        e.preventDefault();
+        let temp = false;
         this.props.block_list.forEach(element => {
             if(element==this.state.name) {
-                this.setState({error:true});
-                return;
+                this.setState({
+                    colour : "#000000",
+                    name : '',
+                    cost : '0',
+                    error:true
+                });
+                temp = true;
             }
         });
+        if(temp)
+            return;
         let new_block = {[this.state.name] : 
             [parseInt(this.state.cost),[
                 parseInt(this.state.colour.substring(1,3),16),
@@ -32,6 +42,11 @@ class Input extends React.Component {
         ]]}
 
         this.props.block_add(true,new_block);
+    }
+
+    skip(e) {
+        let temp = {a:1}
+        this.props.block_add(false,temp);
         e.preventDefault();
     }
 
@@ -93,8 +108,9 @@ class Input extends React.Component {
                         onChange={this.handleChange}></input><br/>
                         </label>
 
-                        <button onClick={this.handleClick}>Add this!</button>
+                        <button onClick={this.handleClick}>Add this!</button><br/>
                     </form>
+                    <button onClick={this.skip}>Skip!</button>
                     {error_msg}
                 </div>
                 

@@ -6,13 +6,15 @@ import Algo from './Astar';
 
 var height = window.innerHeight;
 var width = window.innerWidth;
-var size = 20;
+var size = 30;
 var grid = [];
 var start;
 var end;
 var type = 0;
 var prev = new Node();
 var isrun = true;
+console.log(height)
+console.log(width)
 
 class Gridin extends React.Component {
     constructor(props) {
