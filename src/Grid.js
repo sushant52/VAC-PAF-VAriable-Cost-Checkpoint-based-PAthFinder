@@ -6,11 +6,11 @@ import Algo from './Astar';
 
 var height = window.innerHeight;
 var width = window.innerWidth;
-var size = 30;
 var grid = [];
 var start;
 var end;
 var type = 0;
+var canvas2;
 var prev = new Node();
 var isrun = true;
 console.log(height)
@@ -24,18 +24,27 @@ class Gridin extends React.Component {
 
     Sketch = (p) => {
         let xl = 0, yl = 0;
+        var timer = this.props.timer;
+        var size = this.props.size;
+        
         p.setup = () => {
             p.createCanvas(width,height)
-            p.frameRate(60);
+            // canvas2 = p.createGraphics(width,height);
+            // canvas2.clear()
+            p.noLoop();
+        } 
+
+        p.draw = () => {
+            p.noSmooth();
             p.background(250);
             p.stroke(220);
             p.noFill();
             p.strokeWeight(1);
-            for(let i =0;i+size <width;i+=size) {
+            for(let i =0;i*size + size <width;i++) {
                 xl++;
                 let tmp = 0;
-                for(let j=0;j+size<height;j+=size,tmp++) {
-                    p.rect(i,j,size,size);
+                for(let j=0;j*size +size<height;j++,tmp++) {
+                    p.rect(i*size,j*size,size,size);
                 }
                 yl = tmp;
             }
@@ -44,11 +53,11 @@ class Gridin extends React.Component {
             prev.y = -1;
             type = 0;
             // temp();
+            // p.image(canvas2,0,0)
             p.gridinit();
-        } 
+        }
 
         p.gridinit =  () => {
-            
             for(let i=0;i<yl;++i) {
                 grid[i] = [];
                 for(let j =0;j<xl;++j) {
@@ -58,13 +67,13 @@ class Gridin extends React.Component {
                 }
             }
             p.stroke(220);
-            p.strokeWeight(1);
-            start = grid[6][7];
-            end = grid[3][4];
+            // p.strokeWeight(1);
+            start = grid[0][0];
+            end = grid[0][1];
             p.fill(255,0,0);	
-            p.rect(4*size,3*size,size,size);
+            p.rect(1*size,0*size,size,size);
             p.fill(0,255,0);
-            p.rect(7*size,6*size,size,size);
+            p.rect(0*size,0*size,size,size);
         }
 
         p.drawpath = (path,n) => {
@@ -84,21 +93,22 @@ class Gridin extends React.Component {
                     }
                     n-=1;
                     if(n) {
-                        p.globtimer = setTimeout(loop,1);
+                        p.globtimer = setTimeout(loop,timer);
                     }
-                },1
+                },timer
             )
         }
 
         p.endpath = () => {
             clearTimeout(p.globtimer)
             p.globtimer = 0
-            p.setup();
+            p.redraw();
         }
 
         p.findpath = () => {
             p.stroke(220);
             p.strokeWeight(1);
+            // p.strokeWeight(1);
             let path = Algo.astar(start, end, grid, yl-1,xl-1);
             let n = path.length
             p.drawpath(path,n)

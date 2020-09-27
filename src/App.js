@@ -132,6 +132,8 @@ class App extends React.Component {
                         start = {this.state.start}
                         end = {this.state.end}
                         current = {this.state.valuelist[idx_manager[(this.state.value)] ]}
+                        size = {this.props.size}
+                        timer = {this.props.timer}
                     />
                 </div>
                 <div className='override'

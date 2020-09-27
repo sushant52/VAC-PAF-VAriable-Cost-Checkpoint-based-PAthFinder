@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Interface from './Interface';
+import Init from './Init';
 import './style.css';
 
 ReactDOM.render(  
     <div className='no-bord'>
-        <Interface />
+        <Init />
     </div>
     ,  document.getElementById("root")
 );
