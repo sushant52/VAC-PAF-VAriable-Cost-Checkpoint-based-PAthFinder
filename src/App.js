@@ -21,7 +21,8 @@ class App extends React.Component {
             pos3 : 0,
             pos4 : 0,
             start : false,
-            end : false,
+            end : true,
+            action : 'none',
             newadd : false,
             value : "Gray",
             valuelist : [
@@ -38,6 +39,7 @@ class App extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.addBlock = this.addBlock.bind(this);
+        this.reset = this.reset.bind(this);
     }
 
     onMouseDown(e) {
@@ -84,11 +86,25 @@ class App extends React.Component {
         const {name} = e.target
         this.setState( (prevState)=> {
             if(name==='start')
-                return {start : !prevState.start}
+                return {
+                    start : true,
+                    end : false,
+                    action : name
+                }
             if(name==='end')
-                return {end : !prevState.end}
+                return {
+                    action : name
+                }
             if(name==='addnew')
                 return {newadd : !prevState.newadd}
+        })
+    }
+
+    reset() {
+        this.setState({
+            action : 'none',
+            start : false,
+            end : true
         })
     }
 
@@ -119,7 +135,6 @@ class App extends React.Component {
     }
 
     render() {
-        console.log(idx_manager)
         let added_component = null
         if(this.state.newadd) {
             added_component = (<Input block_list={Object.keys(idx_manager)} block_add={this.addBlock} />)
@@ -129,8 +144,8 @@ class App extends React.Component {
             <div>
                 <div style={{zIndex :-1}}>
                     <Gridin 
-                        start = {this.state.start}
-                        end = {this.state.end}
+                        action = {this.state.action}
+                        reset = {this.reset}
                         current = {this.state.valuelist[idx_manager[(this.state.value)] ]}
                         size = {this.props.size}
                         timer = {this.props.timer}
@@ -154,6 +169,7 @@ class App extends React.Component {
                         name = 'start'
                         onClick = {this.handleClick}
                         className = 'interface-button'
+                        disabled = {this.state.start}
                     >Start
                     </button>
                     <br/>
@@ -161,6 +177,7 @@ class App extends React.Component {
                         name = 'end'
                         onClick = {this.handleClick}
                         className = 'interface-button'
+                        disabled = {this.state.end}
                     >End
                     </button>
                     <br/>

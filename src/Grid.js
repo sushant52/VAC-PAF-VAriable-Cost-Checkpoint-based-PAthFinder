@@ -20,6 +20,7 @@ class Gridin extends React.Component {
     constructor(props) {
         super(props);
         this.myref = React.createRef();
+        this.chng = this.chng.bind(this);
     }
 
     Sketch = (p) => {
@@ -100,8 +101,10 @@ class Gridin extends React.Component {
         }
 
         p.endpath = () => {
+            console.log('Check1')
             clearTimeout(p.globtimer)
             p.globtimer = 0
+            
             p.redraw();
         }
 
@@ -191,10 +194,18 @@ class Gridin extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps.start!=this.props.start)
+        if(this.props.action!=prevProps.action && this.props.action === 'start') {
             this.myp5.findpath()
-        if(prevProps.end!=this.props.end)
+        }
+        else if(this.props.action!=prevProps.action && this.props.action === 'end'){
             this.myp5.endpath()
+            console.log('Cleanup')
+            this.chng()
+        }
+    }
+
+    chng() {
+        this.props.reset()
     }
 
     render() {
@@ -207,12 +218,3 @@ class Gridin extends React.Component {
 }
 
 export default Gridin ;
-
-// if((x==start.x && y==start.y))
-//                 type = 1;
-//             else if((x==end.x && y==end.y))
-//                 type = 2;
-//             else if(grid[x][y].cost == 1)
-//                 type = 0;
-//             else
-//                 type = -1;
