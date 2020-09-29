@@ -9,6 +9,7 @@ class Node {
         this.visited = false;
         this.closed = false;
         this.parent = null;
+        this.color = [250,250,250]
 	}
 };
 

@@ -9,10 +9,8 @@ var width = window.innerWidth;
 var grid = [];
 var start;
 var end;
-var type = 0;
-var canvas2;
+var hard_reset = true;
 var prev = new Node();
-var isrun = true;
 console.log(height)
 console.log(width)
 
@@ -21,41 +19,50 @@ class Gridin extends React.Component {
         super(props);
         this.myref = React.createRef();
         this.chng = this.chng.bind(this);
+        this.clr = this.clr.bind(this);
     }
 
     Sketch = (p) => {
-        let xl = 0, yl = 0;
         var timer = this.props.timer;
         var size = this.props.size;
+        var xl = Math.floor(width/size);
+        var yl = Math.floor(height/size);
         
         p.setup = () => {
             p.createCanvas(width,height)
-            // canvas2 = p.createGraphics(width,height);
-            // canvas2.clear()
+            p.background(250);
+            p.stroke(220);
+            p.strokeWeight(1);
+            for(let i=0;i<yl;++i) {
+                grid[i] = [];
+                for(let j =0;j<xl;++j) {
+                    grid[i][j] = new Node();
+                    grid[i][j].x = i;
+                    grid[i][j].y = j;
+                }
+            }
+            prev.x = -1;
+            prev.y = -1;
             p.noLoop();
         } 
 
         p.draw = () => {
-            p.noSmooth();
-            p.background(250);
-            p.stroke(220);
-            p.noFill();
-            p.strokeWeight(1);
+            if(hard_reset)
+                p.gridinit();
             for(let i =0;i*size + size <width;i++) {
-                xl++;
-                let tmp = 0;
-                for(let j=0;j*size +size<height;j++,tmp++) {
+                for(let j=0;j*size +size<height;j++) {
+                    let cur_grid = grid[j][i]
+                    cur_grid.f = 0
+                    cur_grid.g = 0
+                    cur_grid.h = 0
+                    cur_grid.closed = false
+                    cur_grid.visited = false
+                    cur_grid.parent = null
+                    p.fill(cur_grid.color)
                     p.rect(i*size,j*size,size,size);
                 }
-                yl = tmp;
             }
-            isrun = true;
-            prev.x = -1;
-            prev.y = -1;
-            type = 0;
-            // temp();
-            // p.image(canvas2,0,0)
-            p.gridinit();
+            console.log(start,end,xl,yl,grid)
         }
 
         p.gridinit =  () => {
@@ -67,14 +74,17 @@ class Gridin extends React.Component {
                     grid[i][j].y = j;
                 }
             }
-            p.stroke(220);
-            // p.strokeWeight(1);
             start = grid[0][0];
             end = grid[0][1];
-            p.fill(255,0,0);	
-            p.rect(1*size,0*size,size,size);
-            p.fill(0,255,0);
+            start.color = [0,255,0]
+            end.color = [255,0,0]
+            p.fill(start.color);
             p.rect(0*size,0*size,size,size);
+            p.fill(end.color);	
+            p.rect(1*size,0*size,size,size);
+            prev.x = -1;
+            prev.y = -1;
+            hard_reset = false
         }
 
         p.drawpath = (path,n) => {
@@ -104,22 +114,16 @@ class Gridin extends React.Component {
             console.log('Check1')
             clearTimeout(p.globtimer)
             p.globtimer = 0
-            
             p.redraw();
         }
 
         p.findpath = () => {
-            p.stroke(220);
-            p.strokeWeight(1);
-            // p.strokeWeight(1);
             let path = Algo.astar(start, end, grid, yl-1,xl-1);
             let n = path.length
             p.drawpath(path,n)
         }
 
         p.mouseDragged = (e) => {
-            p.stroke(220);
-            p.strokeWeight(1);
             let x = Math.floor(e.clientY/size);
             let y = Math.floor(e.clientX/size);
             if(Algo.out_of_bounds([x,y], yl-1,xl-1))
@@ -130,31 +134,34 @@ class Gridin extends React.Component {
             prev = grid[x][y];
             let cur_key = Object.keys(this.props.current)[0]
             if(cur_key == "Start") {
-                p.fill(250);
+                start.color = [250,250,250]
+                p.fill(start.color);
                 p.rect(start.y*size,start.x*size,size,size);
                 start.cost = 1;
                 start = cur_grid;
-                p.fill(0,255,0);
+                start.color = [0,255,0]
+                p.fill(start.color);
                 p.rect(y*size,x*size,size,size);
             }
             else if(cur_key == "End") {
-                p.fill(250);
+                end.color = [250,250,250]
+                p.fill(end.color);
                 p.rect(end.y*size,end.x*size,size,size);
                 end.cost = 1;
                 end = cur_grid;
-                p.fill(255,0,0);
+                end.color = [255,0,0]
+                p.fill(end.color);
                 p.rect(y*size,x*size,size,size);
             }
             else {
-                p.fill(...this.props.current[cur_key][1]);
+                cur_grid.color = this.props.current[cur_key][1]
+                p.fill(cur_grid.color);
                 p.rect(y*size,x*size,size,size);
                 cur_grid.cost = this.props.current[cur_key][0];
             }
         }
 
         p.mousePressed = (e) => {
-            p.stroke(220);
-            p.strokeWeight(1);
             let x = Math.floor(e.clientY/size);
             let y = Math.floor(e.clientX/size);
             if(Algo.out_of_bounds([x,y], yl-1,xl-1))
@@ -166,23 +173,28 @@ class Gridin extends React.Component {
             
             let cur_key = Object.keys(this.props.current)[0]
             if(cur_key == "Start") {
-                p.fill(250);
+                start.color = [250,250,250]
+                p.fill(start.color);
                 p.rect(start.y*size,start.x*size,size,size);
                 start.cost = 1;
                 start = cur_grid;
-                p.fill(0,255,0);
+                start.color = [0,255,0]
+                p.fill(start.color);
                 p.rect(y*size,x*size,size,size);
             }
             else if(cur_key == "End") {
-                p.fill(250);
+                end.color = [250,250,250]
+                p.fill(end.color);
                 p.rect(end.y*size,end.x*size,size,size);
                 end.cost = 1;
                 end = cur_grid;
-                p.fill(255,0,0);
+                end.color = [255,0,0]
+                p.fill(end.color);
                 p.rect(y*size,x*size,size,size);
             }
             else {
-                p.fill(...this.props.current[cur_key][1]);
+                cur_grid.color = this.props.current[cur_key][1]
+                p.fill(cur_grid.color);
                 p.rect(y*size,x*size,size,size);
                 cur_grid.cost = this.props.current[cur_key][0];
             }
@@ -201,11 +213,20 @@ class Gridin extends React.Component {
             this.myp5.endpath()
             console.log('Cleanup')
             this.chng()
+        } else if(this.props.action!=prevProps.action && this.props.action === 'clear'){
+            hard_reset = true
+            this.myp5.endpath()
+            console.log('Clear')
+            this.clr()
         }
     }
 
     chng() {
         this.props.reset()
+    }
+
+    clr() {
+        this.props.clear()
     }
 
     render() {

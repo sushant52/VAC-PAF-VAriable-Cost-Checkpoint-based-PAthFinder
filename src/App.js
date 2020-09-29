@@ -22,6 +22,7 @@ class App extends React.Component {
             pos4 : 0,
             start : false,
             end : true,
+            clear : true,
             action : 'none',
             newadd : false,
             value : "Gray",
@@ -40,6 +41,7 @@ class App extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.addBlock = this.addBlock.bind(this);
         this.reset = this.reset.bind(this);
+        this.clear = this.clear.bind(this);
     }
 
     onMouseDown(e) {
@@ -89,9 +91,14 @@ class App extends React.Component {
                 return {
                     start : true,
                     end : false,
+                    clear : false,
                     action : name
                 }
             if(name==='end')
+                return {
+                    action : name
+                }
+            if(name==='clear')
                 return {
                     action : name
                 }
@@ -104,7 +111,17 @@ class App extends React.Component {
         this.setState({
             action : 'none',
             start : false,
-            end : true
+            end : true,
+            clear : false
+        })
+    }
+
+    clear() {
+        this.setState({
+            action : 'none',
+            start : false,
+            end : true,
+            clear : true
         })
     }
 
@@ -146,6 +163,7 @@ class App extends React.Component {
                     <Gridin 
                         action = {this.state.action}
                         reset = {this.reset}
+                        clear = {this.clear}
                         current = {this.state.valuelist[idx_manager[(this.state.value)] ]}
                         size = {this.props.size}
                         timer = {this.props.timer}
@@ -159,7 +177,7 @@ class App extends React.Component {
                         left : this.state.pos1,
                         top : this.state.pos2,
                         opacity : 0.7,
-                        height : "300px",
+                        height : "400px",
                         width : "100px",
                         "backgroundColor" : "purple",
                         zIndex : 1
@@ -179,6 +197,14 @@ class App extends React.Component {
                         className = 'interface-button'
                         disabled = {this.state.end}
                     >End
+                    </button>
+                    <br/>
+                    <button 
+                        name = 'clear'
+                        onClick = {this.handleClick}
+                        className = 'interface-button'
+                        disabled = {this.state.clear}
+                    >Clear
                     </button>
                     <br/>
                     <select 
