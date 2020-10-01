@@ -47,11 +47,12 @@ const Algo = {
             // rect(cur_node.y*60,cur_node.x*60,60,60);
             if(cur_node.x==end.x && cur_node.y==end.y) {
                 let current = cur_node;
+                let final_path = []
                 while(current!=null) {
-                    path.push([current.x,current.y,2]);
+                    final_path.push([current.x,current.y,2]);
                     current = current.parent;
                 }
-                return path;
+                return [path,final_path];
             }
                 cur_node.closed = true;
                 temp = [cur_node.x , cur_node.y, 1];

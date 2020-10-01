@@ -26,6 +26,7 @@ class App extends React.Component {
             action : 'none',
             newadd : false,
             value : "Gray",
+            visualize : true,
             valuelist : [
                 {Start : [1,[0,255,0]]},
                 {End : [1,[255,0,0]]},
@@ -126,9 +127,9 @@ class App extends React.Component {
     }
 
     handleChange(e) {
+        const {name, value, type, checked} = e.target
         e.stopPropagation();
-        this.setState({value : e.target.value})
-        e.preventDefault();
+        type === 'checkbox' ? this.setState(prevState => {return{[name] : !prevState.visualize}}): this.setState({value : value})
     }
 
     addBlock(toAdd,new_block) {
@@ -164,6 +165,7 @@ class App extends React.Component {
                         action = {this.state.action}
                         reset = {this.reset}
                         clear = {this.clear}
+                        visualize = {this.state.visualize}
                         current = {this.state.valuelist[idx_manager[(this.state.value)] ]}
                         size = {this.props.size}
                         timer = {this.props.timer}
@@ -178,7 +180,7 @@ class App extends React.Component {
                         top : this.state.pos2,
                         opacity : 0.7,
                         height : "400px",
-                        width : "100px",
+                        width : "150px",
                         "backgroundColor" : "purple",
                         zIndex : 1
                     }}
@@ -217,12 +219,19 @@ class App extends React.Component {
                         })}
                     </select>
                     <br/>
+                    <input 
+                    name='visualize' 
+                    type='checkbox' 
+                    checked={this.state.visualize} 
+                    onChange = {this.handleChange}/>
+                    <span>Visualize Path</span>
                     <button 
                         name = 'addnew'
                         onClick = {this.handleClick}
                         className = 'interface-button'
                     >Addnew
                     </button>
+                    
                 </div>
                 <div>{added_component}</div>
             </div>

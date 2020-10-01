@@ -47,6 +47,8 @@ class Gridin extends React.Component {
         } 
 
         p.draw = () => {
+            p.stroke(220);
+            p.strokeWeight(1);
             if(hard_reset)
                 p.gridinit();
             for(let i =0;i*size + size <width;i++) {
@@ -66,6 +68,8 @@ class Gridin extends React.Component {
         }
 
         p.gridinit =  () => {
+            p.stroke(220);
+            p.strokeWeight(1);
             for(let i=0;i<yl;++i) {
                 grid[i] = [];
                 for(let j =0;j<xl;++j) {
@@ -87,9 +91,9 @@ class Gridin extends React.Component {
             hard_reset = false
         }
 
-        p.drawpath = (path,n) => {
-            p.globtimer = setTimeout(function loop() {
-                    let singleArr = path.shift();
+        p.drawpath = (pathn,n,callback) => {
+            p.visualtimer = setTimeout(function loop() {
+                    let singleArr = pathn.shift();
                     if(singleArr[2]==0) {
                         p.fill(50, 130, 200);
                         p.rect(singleArr[1]*size,singleArr[0]*size,size,size);
@@ -104,7 +108,10 @@ class Gridin extends React.Component {
                     }
                     n-=1;
                     if(n) {
-                        p.globtimer = setTimeout(loop,timer);
+                        p.visualtimer = setTimeout(loop,timer);
+                    }
+                    else if(singleArr[2]!=2){
+                        callback()
                     }
                 },timer
             )
@@ -112,15 +119,35 @@ class Gridin extends React.Component {
 
         p.endpath = () => {
             console.log('Check1')
-            clearTimeout(p.globtimer)
-            p.globtimer = 0
+            clearTimeout(p.visualtimer)
+            p.visualtimer = 0
             p.redraw();
         }
 
         p.findpath = () => {
+            
             let path = Algo.astar(start, end, grid, yl-1,xl-1);
-            let n = path.length
-            p.drawpath(path,n)
+            if(this.props.visualize) {
+                let n = path[0].length
+                p.drawpath(path[0],n,pathdraw)
+                function pathdraw(){
+                    let n = path[1].length
+                    for(let i = 0;i<n-1;++i) {
+                        p.stroke(255, 200, 0)
+                        p.strokeWeight(3)
+                        p.line(path[1][i][1]*size + size/2,path[1][i][0]*size + size/2,path[1][i+1][1]*size + size/2,path[1][i+1][0]*size + size/2)
+                    }
+                    // p.drawpath(path[1],n,null)
+                }
+            }
+            else {
+                let n = path[1].length
+                for(let i = 0;i<n-1;++i) {
+                    p.stroke(255, 200, 0)
+                    p.strokeWeight(3)
+                    p.line(path[1][i][1]*size + size/2,path[1][i][0]*size + size/2,path[1][i+1][1]*size + size/2,path[1][i+1][0]*size + size/2)
+                }
+            }
         }
 
         p.mouseDragged = (e) => {
