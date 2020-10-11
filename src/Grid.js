@@ -3,12 +3,17 @@ import p5 from 'p5';
 import Node from './Node';
 import binaryHeap from './binheap';
 import Algo from './Astar';
+require("@babel/plugin-transform-runtime");
 
 var height = window.innerHeight;
 var width = window.innerWidth;
 var grid = [];
 var start;
 var end;
+var chk1 = null;
+var chk2 = null;
+var chk3 = null;
+var exec = 0;
 var hard_reset = true;
 var prev = new Node();
 console.log(height)
@@ -91,8 +96,9 @@ class Gridin extends React.Component {
             hard_reset = false
         }
 
-        p.drawpath = (pathn,n,callback) => {
-            p.visualtimer = setTimeout(function loop() {
+        p.drawpath = (pathn,n) => {
+            return new Promise((resolve) => {
+                p.visualtimer = setTimeout(function loop() {
                     let singleArr = pathn.shift();
                     if(singleArr[2]==0) {
                         p.fill(50, 130, 200);
@@ -102,52 +108,65 @@ class Gridin extends React.Component {
                         p.fill(0, 230, 138);
                         p.rect(singleArr[1]*size,singleArr[0]*size,size,size);
                     }
-                    if(singleArr[2]==2) {
-                        p.fill(255, 200, 0);
-                        p.rect(singleArr[1]*size,singleArr[0]*size,size,size);
-                    }
                     n-=1;
                     if(n) {
                         p.visualtimer = setTimeout(loop,timer);
                     }
-                    else if(singleArr[2]!=2){
-                        callback()
-                    }
-                },timer
-            )
+                    else
+                        resolve();
+                    },timer
+                )
+            })
         }
 
         p.endpath = () => {
             console.log('Check1')
             clearTimeout(p.visualtimer)
+            clearTimeout(p.linetimer)
             p.visualtimer = 0
+            p.linetimer = 0
             p.redraw();
         }
 
-        p.findpath = () => {
-            
-            let path = Algo.astar(start, end, grid, yl-1,xl-1);
-            if(this.props.visualize) {
-                let n = path[0].length
-                p.drawpath(path[0],n,pathdraw)
-                function pathdraw(){
-                    let n = path[1].length
-                    for(let i = 0;i<n-1;++i) {
-                        p.stroke(255, 200, 0)
-                        p.strokeWeight(3)
-                        p.line(path[1][i][1]*size + size/2,path[1][i][0]*size + size/2,path[1][i+1][1]*size + size/2,path[1][i+1][0]*size + size/2)
-                    }
-                    // p.drawpath(path[1],n,null)
-                }
-            }
-            else {
-                let n = path[1].length
-                for(let i = 0;i<n-1;++i) {
+        p.linedraw = (arr,n) => {
+            return new Promise((resolve) => {
+                p.linetimer = setTimeout(function loop() {
                     p.stroke(255, 200, 0)
                     p.strokeWeight(3)
-                    p.line(path[1][i][1]*size + size/2,path[1][i][0]*size + size/2,path[1][i+1][1]*size + size/2,path[1][i+1][0]*size + size/2)
+                    p.line(arr[n-1][1]*size + size/2,arr[n-1][0]*size + size/2,arr[n-2][1]*size + size/2,arr[n-2][0]*size + size/2)
+                    n--;
+                    if(n==1)
+                        resolve();
+                    else
+                        p.linetimer = setTimeout(loop,timer)
                 }
+                ,timer)
+            })
+        }
+
+        p.pathdraw = async (path) => {
+            let n = path.length
+            for(let i = 0;i<n;++i) {
+                let n1 = path[i].length
+                await p.linedraw(path[i],n1)
             }
+        }
+
+        p.findpath = async (arr) => {
+            let n = arr.length
+            let result_path = []
+            for(let i=0;i<n-1;++i) {
+                let grid_clone = JSON.parse(JSON.stringify(grid))
+                p.stroke(220);
+                p.strokeWeight(1);
+                let path = Algo.astar(arr[i], arr[i+1], grid_clone, yl-1,xl-1);
+                if(this.props.visualize) {
+                    let n = path[0].length
+                    await p.drawpath(path[0],n)
+                }
+                result_path.push(path[1])
+            }
+            p.pathdraw(result_path);
         }
 
         p.mouseDragged = (e) => {
@@ -160,31 +179,80 @@ class Gridin extends React.Component {
             let cur_grid = grid[x][y];
             prev = grid[x][y];
             let cur_key = Object.keys(this.props.current)[0]
-            if(cur_key == "Start") {
-                start.color = [250,250,250]
-                p.fill(start.color);
-                p.rect(start.y*size,start.x*size,size,size);
-                start.cost = 1;
-                start = cur_grid;
-                start.color = [0,255,0]
-                p.fill(start.color);
-                p.rect(y*size,x*size,size,size);
-            }
-            else if(cur_key == "End") {
-                end.color = [250,250,250]
-                p.fill(end.color);
-                p.rect(end.y*size,end.x*size,size,size);
-                end.cost = 1;
-                end = cur_grid;
-                end.color = [255,0,0]
-                p.fill(end.color);
-                p.rect(y*size,x*size,size,size);
-            }
-            else {
-                cur_grid.color = this.props.current[cur_key][1]
-                p.fill(cur_grid.color);
-                p.rect(y*size,x*size,size,size);
-                cur_grid.cost = this.props.current[cur_key][0];
+            switch(cur_key) {
+                case "Start" : {
+                    start.color = [250,250,250]
+                    p.fill(start.color);
+                    p.rect(start.y*size,start.x*size,size,size);
+                    start.cost = 1;
+                    start = cur_grid;
+                    start.color = [0,255,0]
+                    p.fill(start.color);
+                    p.rect(y*size,x*size,size,size);
+                    break;
+                }
+                case "End" : {
+                    end.color = [250,250,250]
+                    p.fill(end.color);
+                    p.rect(end.y*size,end.x*size,size,size);
+                    end.cost = 1;
+                    end = cur_grid;
+                    end.color = [255,0,0]
+                    p.fill(end.color);
+                    p.rect(y*size,x*size,size,size);
+                    break;
+                }
+                case "Chk1" : {
+                    if(chk1!=null) {
+                        chk1.color = [250,250,250]
+                        p.fill(chk1.color);
+                        p.rect(chk1.y*size,chk1.x*size,size,size);
+                        chk1.cost = 1;
+                    }
+                    chk1 = cur_grid;
+                    chk1.color = [247,239,10]
+                    p.fill(chk1.color);
+                    p.rect(y*size,x*size,size,size);
+                    break;
+                }
+                case "Chk2" : {
+                    if(chk2!=null) {
+                        chk2.color = [250,250,250]
+                        p.fill(chk2.color);
+                        p.rect(chk2.y*size,chk2.x*size,size,size);
+                        chk2.cost = 1;
+                    }
+                    chk2 = cur_grid;
+                    chk2.color = [247,211,10]
+                    p.fill(chk2.color);
+                    p.rect(y*size,x*size,size,size);
+                    break;
+                }
+                case "Chk3" : {
+                    if(chk3!=null) {
+                        chk3.color = [250,250,250]
+                        p.fill(chk3.color);
+                        p.rect(chk3.y*size,chk3.x*size,size,size);
+                        chk3.cost = 1;
+                    }
+                    chk3 = cur_grid;
+                    chk3.color = [247,168,10]
+                    p.fill(chk3.color);
+                    p.rect(y*size,x*size,size,size);
+                    break;
+                }
+                default : {
+                    if(chk1!=null && x==chk1.x && y==chk1.y)
+                        chk1=null;
+                    if(chk2!=null && x==chk2.x && y==chk2.y)
+                        chk2=null;
+                    if(chk3!=null && x==chk3.x && y==chk3.y)
+                        chk3=null;
+                    cur_grid.color = this.props.current[cur_key][1]
+                    p.fill(cur_grid.color);
+                    p.rect(y*size,x*size,size,size);
+                    cur_grid.cost = this.props.current[cur_key][0];
+                }
             }
         }
 
@@ -199,31 +267,80 @@ class Gridin extends React.Component {
                 return;
             
             let cur_key = Object.keys(this.props.current)[0]
-            if(cur_key == "Start") {
-                start.color = [250,250,250]
-                p.fill(start.color);
-                p.rect(start.y*size,start.x*size,size,size);
-                start.cost = 1;
-                start = cur_grid;
-                start.color = [0,255,0]
-                p.fill(start.color);
-                p.rect(y*size,x*size,size,size);
-            }
-            else if(cur_key == "End") {
-                end.color = [250,250,250]
-                p.fill(end.color);
-                p.rect(end.y*size,end.x*size,size,size);
-                end.cost = 1;
-                end = cur_grid;
-                end.color = [255,0,0]
-                p.fill(end.color);
-                p.rect(y*size,x*size,size,size);
-            }
-            else {
-                cur_grid.color = this.props.current[cur_key][1]
-                p.fill(cur_grid.color);
-                p.rect(y*size,x*size,size,size);
-                cur_grid.cost = this.props.current[cur_key][0];
+            switch(cur_key) {
+                case "Start" : {
+                    start.color = [250,250,250]
+                    p.fill(start.color);
+                    p.rect(start.y*size,start.x*size,size,size);
+                    start.cost = 1;
+                    start = cur_grid;
+                    start.color = [0,255,0]
+                    p.fill(start.color);
+                    p.rect(y*size,x*size,size,size); 
+                    break;
+                }
+                case "End" : {
+                    end.color = [250,250,250]
+                    p.fill(end.color);
+                    p.rect(end.y*size,end.x*size,size,size);
+                    end.cost = 1;
+                    end = cur_grid;
+                    end.color = [255,0,0]
+                    p.fill(end.color);
+                    p.rect(y*size,x*size,size,size);
+                    break;
+                }
+                case "Chk1" : {
+                    if(chk1!=null) {
+                        chk1.color = [250,250,250]
+                        p.fill(chk1.color);
+                        p.rect(chk1.y*size,chk1.x*size,size,size);
+                        chk1.cost = 1;
+                    }
+                    chk1 = cur_grid;
+                    chk1.color = [247,239,10]
+                    p.fill(chk1.color);
+                    p.rect(y*size,x*size,size,size);
+                    break;
+                }
+                case "Chk2" : {
+                    if(chk2!=null) {
+                        chk2.color = [250,250,250]
+                        p.fill(chk2.color);
+                        p.rect(chk2.y*size,chk2.x*size,size,size);
+                        chk2.cost = 1;
+                    }
+                    chk2 = cur_grid;
+                    chk2.color = [247,211,10]
+                    p.fill(chk2.color);
+                    p.rect(y*size,x*size,size,size);
+                    break;
+                }
+                case "Chk3" : {
+                    if(chk3!=null) {
+                        chk3.color = [250,250,250]
+                        p.fill(chk3.color);
+                        p.rect(chk3.y*size,chk3.x*size,size,size);
+                        chk3.cost = 1;
+                    }
+                    chk3 = cur_grid;
+                    chk3.color = [247,168,10]
+                    p.fill(chk3.color);
+                    p.rect(y*size,x*size,size,size);
+                    break;
+                }
+                default : {
+                    if(chk1!=null && x==chk1.x && y==chk1.y)
+                        chk1=null;
+                    if(chk2!=null && x==chk2.x && y==chk2.y)
+                        chk2=null;
+                    if(chk3!=null && x==chk3.x && y==chk3.y)
+                        chk3=null;
+                    cur_grid.color = this.props.current[cur_key][1]
+                    p.fill(cur_grid.color);
+                    p.rect(y*size,x*size,size,size);
+                    cur_grid.cost = this.props.current[cur_key][0];
+                }
             }
         }
     }
@@ -234,7 +351,19 @@ class Gridin extends React.Component {
 
     componentDidUpdate(prevProps) {
         if(this.props.action!=prevProps.action && this.props.action === 'start') {
-            this.myp5.findpath()
+            let arr = []
+            arr.push(start)
+            if(chk1!=null)
+                arr.push(chk1);
+            
+            if(chk2!=null)
+                arr.push(chk2)
+
+            if(chk3!=null)
+                arr.push(chk3)
+
+            arr.push(end)
+            this.myp5.findpath(arr);
         }
         else if(this.props.action!=prevProps.action && this.props.action === 'end'){
             this.myp5.endpath()

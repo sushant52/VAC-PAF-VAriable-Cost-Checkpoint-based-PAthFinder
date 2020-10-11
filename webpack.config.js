@@ -3,7 +3,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 module.exports = 
 {  
-    entry: path.join(__dirname,'src','index.js'),  
+    entry: ['@babel/plugin-transform-runtime',path.join(__dirname,'src','index.js')],  
     output: 
     {    
         path: path.join(__dirname,'build'),    
@@ -18,6 +18,9 @@ module.exports =
     {    
         contentBase: path.join(__dirname,'src')  
     },  
+    node: {
+        fs: 'empty',
+      },
     module: 
     {    
         rules: 

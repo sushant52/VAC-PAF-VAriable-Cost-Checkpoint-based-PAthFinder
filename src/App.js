@@ -6,9 +6,12 @@ var idx_manager = {
     Start : 0,
     End : 1,
     Gray : 2,
-    White : 3
+    White : 3,
+    Chk1 : 4,
+    Chk2 : 5,
+    Chk3 : 6
 }
-var next_idx = 4;
+var next_idx = 7;
 
 class App extends React.Component {
     constructor(props) {
@@ -31,7 +34,10 @@ class App extends React.Component {
                 {Start : [1,[0,255,0]]},
                 {End : [1,[255,0,0]]},
                 {Gray : [0,[220,220,220]]},
-                {White : [1,[250,250,250]]}
+                {White : [1,[250,250,250]]},
+                {Chk1 : [1,[247,239,10]]},
+                {Chk2 : [1,[247,211,10]]},
+                {Chk3 : [1,[247,168,10]]}
             ]
         }
         this.onStart = this.onStart.bind(this);
@@ -135,7 +141,6 @@ class App extends React.Component {
     addBlock(toAdd,new_block) {
         if(toAdd) {
             idx_manager = {...idx_manager,[Object.keys(new_block)[0]] : next_idx}
-            let new_valuelist = 
             this.setState(prevstate => {
                 let new_valuelist = prevstate.valuelist;
                 new_valuelist.push(new_block);
