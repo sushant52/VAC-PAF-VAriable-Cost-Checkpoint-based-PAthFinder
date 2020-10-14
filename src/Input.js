@@ -1,4 +1,58 @@
 import React from 'react';
+import { withStyles, createStyles } from "@material-ui/core/styles";
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import classNames from 'classnames';
+
+const styles = theme => createStyles({
+    textroot: {
+      "& .MuiFormLabel-root": {
+        color: "#ffffff",
+        opacity : 0.5
+      },
+      '& label.Mui-focused': {
+        color: '#00DBB3',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: '#00DBB3',
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#00DBB3',
+        },
+        '&:hover fieldset': {
+          borderColor: '#00DBB3',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: '#00DBB3',
+        }
+      }
+    },
+    buttonroot: {
+        borderRadius : '30px',
+        marginTop:'-10px',
+        borderWidth : '1px',
+        backgroundColor: '#323E3E',
+        borderColor: '#00DBB3',
+        color : 'white',
+        '&:hover': {
+          borderWidth: "1px",
+          backgroundColor: '#00DBB3',
+          borderColor: '#323E3E',
+        },
+        '&:active': {
+          borderWidth: "1px",
+          backgroundColor: '#00DBB3',
+          borderColor: '#323E3E',
+        }
+    },
+    input: {
+        boxSizing: 'border-box',
+        color :'white',
+        borderRadius : '30px',
+        borderColor : 'white'
+    }
+});
 
 class Input extends React.Component {
     constructor(props) {
@@ -58,60 +112,86 @@ class Input extends React.Component {
     render() {
         let error_msg = null;
         if(this.state.error) {
-            error_msg = (<div>Errorlol!!!!</div>)
+            error_msg = (<div className='norm_text' style={{marginTop:'-5px', color:'red'}}>
+            Error : Please ensure that name is unique and cost is greater than 0.
+        </div>)
         }
         return(
             <div
             onMouseDown = {this.onMouseDown}
-            style={{
-                position: 'absolute',
-                top: '0px',
-                right: '0px',
-                bottom: '0px',
-                left: '0px',
-                background: 'rgba(0,0,0,0.7)',
-                zIndex: '3'
-            }}
+            className='faded_bg'
             >
                 <div
-                style={{
-                    position: 'relative',
-                    width: '50%',
-                    height: '50%',
-                    margin: 'auto',
-                    top: '25%',
-                    backgroundColor : 'white'
-                }}
+                className='add-grid-init'
                 >
-                    <form>
-                        <label>Input Name: 
-                        <input type='text' 
-                        id='name' 
-                        name='name' 
-                        value={this.state.name} 
-                        onChange={this.handleChange}></input><br/>
-                        </label>
-
-                        <label>Input Cost: 
-                        <input type='text' 
-                        id='cost' 
-                        name='cost' 
-                        value={this.state.cost} 
-                        onChange={this.handleChange}></input><br/>
-                        </label>
-
-                        <label>Pick Color: 
-                        <input type='color' 
-                        id='colour' 
-                        name='colour' 
-                        value={this.state.colour} 
-                        onChange={this.handleChange}></input><br/>
-                        </label>
-
-                        <button onClick={this.handleClick}>Add this!</button><br/>
-                    </form>
-                    <button onClick={this.skip}>Skip!</button>
-                    {error_msg}
+                    <div className='input-header'>
+                        <div className='big_head'>VACC-PAF</div>
+                    </div>
+                    <div className='input-init-form'>
+                        <div className='small_head norm_text'>Enter Values for a new grid type !</div>
+                        <div className='norm_text'>Name : An unique name for your new grid</div>
+                        <div style={{textAlign:'center'}}>
+                            Cost : A number representing the cost it takes for the algorithm to travel a single grid of this type.  <br/>
+                            Default whitespaces have a cost of 1. 
+                        </div>
+                        <div className='norm_text'>Color : Represent the new grid with a color of your choice</div>
+                        <div className='norm_text' style={{marginTop:'2%'}}>
+                            <TextField
+                            className={classNames(this.props.classes[`textroot`])}
+                            InputProps = {{
+                                className : this.props.classes.input
+                            }}
+                            name='name' 
+                            value={this.state.name} 
+                            onChange={this.handleChange}
+                            autoComplete="off"
+                            label='Name'
+                            variant="outlined"/><br/>
+                        </div>
+                        <div className='norm_text'>
+                            <TextField
+                            className={classNames(this.props.classes[`textroot`])}
+                            InputProps = {{
+                                className : this.props.classes.input
+                            }}
+                            name='cost' 
+                            value={this.state.cost} 
+                            onChange={this.handleChange}
+                            autoComplete="off"
+                            label='Cost'
+                            variant="outlined"/><br/>
+                        </div>
+                        
+                        <div className='norm-text-lowmargin'>
+                            <label>Pick Color:  <input type='color' 
+                            id='colour' 
+                            name='colour' 
+                            value={this.state.colour} 
+                            onChange={this.handleChange}></input><br/>
+                            </label>
+                        </div>
+                        <div className='norm_text'>{error_msg}</div>
+                    </div>
+                    <div className='add-grid-footer'>
+                        <div className='norm_text'>
+                            <Button onClick={this.handleClick} 
+                                style={{width:'150%',height:'70%'}}
+                                className={classNames(this.props.classes[`buttonroot`])}
+                                variant="outlined" 
+                                color="primary">
+                                    Add This!
+                            </Button>
+                        </div>
+                        <div className='norm_text'>
+                            <Button onClick={this.skip} 
+                                style={{width:'150%',height:'70%'}}
+                                className={classNames(this.props.classes[`buttonroot`])}
+                                variant="outlined" 
+                                color="primary">
+                                    Skip!
+                            </Button>
+                        </div>
+                    </div>
                 </div>
                 
             </div>
@@ -119,4 +199,4 @@ class Input extends React.Component {
     }
 }
 
-export default Input;
+export default withStyles(styles)(Input);

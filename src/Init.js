@@ -1,5 +1,59 @@
 import React from 'react';
 import App from './App';
+import { withStyles, createStyles } from "@material-ui/core/styles";
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import classNames from 'classnames';
+
+const styles = theme => createStyles({
+    textroot: {
+      "& .MuiFormLabel-root": {
+        color: "#ffffff",
+        opacity : 0.5
+      },
+      '& label.Mui-focused': {
+        color: '#00DBB3',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: '#00DBB3',
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#00DBB3',
+        },
+        '&:hover fieldset': {
+          borderColor: '#00DBB3',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: '#00DBB3',
+        }
+      }
+    },
+    buttonroot: {
+        borderRadius : '30px',
+        marginTop:'-10px',
+        borderWidth : '1px',
+        backgroundColor: '#323E3E',
+        borderColor: '#00DBB3',
+        color : 'white',
+        '&:hover': {
+          borderWidth: "1px",
+          backgroundColor: '#00DBB3',
+          borderColor: '#323E3E',
+        },
+        '&:active': {
+          borderWidth: "1px",
+          backgroundColor: '#00DBB3',
+          borderColor: '#323E3E',
+        }
+    },
+    input: {
+        boxSizing: 'border-box',
+        color :'white',
+        borderRadius : '30px',
+        borderColor : 'white'
+    }
+});
 
 class Init extends React.Component {
     constructor(props) {
@@ -40,53 +94,72 @@ class Init extends React.Component {
     render() {
         let error_msg = null;
         if(this.state.error) {
-            error_msg = (<div>Errorlol!!!!</div>)
+            error_msg = (<div className='norm_text' style={{marginTop:'-15px', color:'red'}}>
+                Error : Please ensure that size is a minimum of 5 and maximum enough to generate atleast two grids.
+            </div>)
         }
         let init_form = null;
         if(!this.state.ready)
             init_form = (
             <div
             onMouseDown = {this.onMouseDown}
-            style={{
-                position: 'absolute',
-                top: '0px',
-                right: '0px',
-                bottom: '0px',
-                left: '0px',
-                background: 'rgba(0,0,0,0.7)',
-                zIndex: '3'
-            }}
+            className = 'faded_bg'
             >
                 <div
-                style={{
-                    position: 'relative',
-                    width: '50%',
-                    height: '50%',
-                    margin: 'auto',
-                    top: '25%',
-                    backgroundColor : 'white'
-                }}
-                >
-                    <form>
-                        <label>Size of each grid: 
-                        <input type='text' 
-                        id='size' 
-                        name='size' 
-                        value={this.state.size} 
-                        onChange={this.handleChange}></input><br/>
-                        </label>
-
-                        <label>Timer: 
-                        <input type='text' 
-                        id='timer' 
-                        name='timer' 
-                        value={this.state.timer} 
-                        onChange={this.handleChange}></input><br/>
-                        </label>
-
-                        <button onClick={this.handleClick}>Add this!</button><br/>
-                    </form>
-                    {error_msg}
+                className = 'grid_init'>
+                    <div className='header'>
+                        <div className='big_head'>Welcome to VACC-PAF</div>
+                        <div className='small_head'>An A* Pathfinding Algorithm Sandbox</div>
+                    </div>
+                    <div className='init_form'><div>
+                        <div className='small_head norm_text' style={{marginTop:'2%'}}>Enter the initialization values for the grid</div>
+                        <div className='norm_text'>Size : A number that defines the size of each small grid in pixels.</div>
+                        <div className='norm_text'>Timer : Number defining time in milliseconds used for controlling visualization speed.</div>
+                        <div className='norm_text'>If it's your first time, starting size of 30 and a timer of 2 is recommended.</div>
+                        <div className='norm_text'>
+                            <TextField
+                            style={{top:'10px'}}
+                            className={classNames(this.props.classes[`textroot`])}
+                            InputProps = {{
+                                className : this.props.classes.input
+                            }}
+                            name='size' 
+                            value={this.state.size} 
+                            onChange={this.handleChange}
+                            autoComplete="off"
+                            label='Size'
+                            variant="outlined"/><br/>
+                        </div>
+                        <div className='norm_text'>
+                            <TextField
+                            className={classNames(this.props.classes[`textroot`])}
+                            InputProps = {{
+                                className : this.props.classes.input
+                            }}
+                            name='timer' 
+                            value={this.state.timer} 
+                            onChange={this.handleChange}
+                            autoComplete="off"
+                            label='Timer'
+                            variant="outlined"/><br/>
+                        </div>
+                        <div className='norm_text' >
+                            <Button onClick={this.handleClick} 
+                            className={classNames(this.props.classes[`buttonroot`])}
+                            variant="outlined" 
+                            color="primary">
+                                Start!
+                            </Button><br/>
+                        </div>
+                        {error_msg}
+                    </div>
+                    </div>
+                    <div className='footer'> 
+                        Take a peek at the source code by <a style={{color:'white'}}
+                        href='https://github.com/sushant52/VAC-PAF-VAriable-Cost-Checkpoint-based-PAthFinder-'>
+                         sushant52 </a>
+                    </div>
+                    
                 </div>
             </div>
         )
@@ -103,4 +176,4 @@ class Init extends React.Component {
     }
 }
 
-export default Init;
+export default withStyles(styles)(Init);
