@@ -1,6 +1,11 @@
 import React from 'react';
 import Gridin from './Grid';
 import Input from './Input';
+import { withStyles, createStyles } from "@material-ui/core/styles";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Button from '@material-ui/core/Button';
 
 var idx_manager = {
     Start : 0,
@@ -12,6 +17,54 @@ var idx_manager = {
     Chk3 : 6
 }
 var next_idx = 7;
+
+const styles = theme => createStyles({
+    buttonroot: {
+        fontFamily: 'Kalam',
+        width : '120px',
+        height : '50px',
+        marginTop : '10px',
+        borderRadius : '30px',
+        borderWidth : '1px',
+        backgroundColor: '#323E3E',
+        borderColor: '#00DBB3',
+        color : 'white',
+        '&:hover': {
+          backgroundColor: '#00DBB3',
+          borderColor: '#323E3E',
+        },
+        '&:active': {
+          backgroundColor: '#00DBB3',
+          borderColor: '#323E3E',
+        },
+        '&:disabled': {
+            color : '#b0b0b0',
+            borderColor: '#00a88a',
+        }
+    },
+    select: {
+        fontFamily: 'Kalam',
+        width : '150px',
+        height : '50px',
+        marginTop : '20px',
+        color : 'white',
+        borderRadius : '30px',
+    },
+    customOutline: {
+        "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: '#00DBB3'
+        },
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: '#00DBB3'
+        },
+        "&:active .MuiOutlinedInput-notchedOutline": {
+            borderColor: '#00DBB3'
+        }
+    },
+    icon: {
+        fill: '#00DBB3',
+    }
+});
 
 class App extends React.Component {
     constructor(props) {
@@ -92,7 +145,7 @@ class App extends React.Component {
     }
 
     handleClick(e) {
-        const {name} = e.target
+        const {name} = e.currentTarget
         this.setState( (prevState)=> {
             if(name==='start')
                 return {
@@ -176,67 +229,116 @@ class App extends React.Component {
                         timer = {this.props.timer}
                     />
                 </div>
-                <div className='override'
+                <div className='drag-ui'
                     ref = {this.selector}
                     onMouseDown = {this.onMouseDown}
                     style={{
-                        position : 'absolute',
                         left : this.state.pos1,
-                        top : this.state.pos2,
-                        opacity : 0.7,
-                        height : "400px",
-                        width : "150px",
-                        "backgroundColor" : "purple",
-                        zIndex : 1
+                        top : this.state.pos2
                     }}
-                >
-                    <button 
-                        name = 'start'
-                        onClick = {this.handleClick}
-                        className = 'interface-button'
-                        disabled = {this.state.start}
-                    >Start
-                    </button>
-                    <br/>
-                    <button 
-                        name = 'end'
-                        onClick = {this.handleClick}
-                        className = 'interface-button'
-                        disabled = {this.state.end}
-                    >End
-                    </button>
-                    <br/>
-                    <button 
-                        name = 'clear'
-                        onClick = {this.handleClick}
-                        className = 'interface-button'
-                        disabled = {this.state.clear}
-                    >Clear
-                    </button>
-                    <br/>
-                    <select 
-                    value={this.state.value}
-                    onChange = {this.handleChange}
-                    className = 'select-block'
                     >
-                        {this.state.valuelist.map((block,idx) => {
-                            return(<option key={Object.keys(block)[0]}>{Object.keys(block)[0]}</option>)
-                        })}
-                    </select>
-                    <br/>
-                    <input 
-                    name='visualize' 
-                    type='checkbox' 
-                    checked={this.state.visualize} 
-                    onChange = {this.handleChange}/>
-                    <span>Visualize Path</span>
-                    <button 
-                        name = 'addnew'
-                        onClick = {this.handleClick}
-                        className = 'interface-button'
-                    >Addnew
-                    </button>
-                    
+                    <div className='drag-ui-header'>
+                        <span style={{marginTop:'10px'}}>VACC-PAF</span>
+                    </div>
+                    <div className='drag-ui-select'>
+                        <FormControl variant="outlined" classes={{ root: this.props.classes.customOutline }}>
+                        <Select
+                            value={this.state.value}
+                            onChange = {this.handleChange}
+                            className={this.props.classes.select}
+                            inputProps = {{classes:{icon : this.props.classes.icon}}}
+                            >
+                            {this.state.valuelist.map((block,idx) => {
+                                return(<MenuItem key={Object.keys(block)[0]}
+                                        value = {Object.keys(block)[0]}>
+                                        {Object.keys(block)[0]}</MenuItem>)
+                            })}
+                        </Select>
+                        </FormControl>
+
+                        {/* <select 
+                        value={this.state.value}
+                        onChange = {this.handleChange}
+                        className = 'select-block'
+                        >
+                            {this.state.valuelist.map((block,idx) => {
+                                return(<option key={Object.keys(block)[0]}>{Object.keys(block)[0]}</option>)
+                            })}
+                        </select>
+                        <br/> */}
+                        <Button 
+                            name='addnew'
+                            onClick={this.handleClick} 
+                            className={this.props.classes.buttonroot}
+                            variant="outlined">
+                                Addnew
+                        </Button>
+                        {/* <button 
+                            name = 'addnew'
+                            onClick = {this.handleClick}
+                            className = 'interface-button'
+                        >Addnew
+                        </button> */}
+                        <div style = {{
+                            color : 'white',
+                            marginTop : '10px'
+                        }}>
+                            <input 
+                            name='visualize' 
+                            type='checkbox' 
+                            checked={this.state.visualize} 
+                            onChange = {this.handleChange}/>
+                            <span style={{fontFamily: 'Kalam'}}>Visualize Path</span>
+                        </div>
+                        <Button 
+                            name='start'
+                            onClick={this.handleClick} 
+                            className={this.props.classes.buttonroot}
+                            disabled = {this.state.start}
+                            variant="outlined">
+                                Start
+                        </Button>
+                        {/* <button 
+                            name = 'start'
+                            onClick = {this.handleClick}
+                            className = 'interface-button'
+                            disabled = {this.state.start}
+                        >Start
+                        </button>
+                        <br/> */}
+                        <Button 
+                            name='end'
+                            onClick={this.handleClick} 
+                            className={this.props.classes.buttonroot}
+                            disabled = {this.state.end}
+                            variant="outlined">
+                                End
+                        </Button>
+                        {/* <button 
+                            name = 'end'
+                            onClick = {this.handleClick}
+                            className = 'interface-button'
+                            disabled = {this.state.end}
+                        >End
+                        </button>
+                        <br/> */}
+                        <Button 
+                            name='clear'
+                            onClick={this.handleClick} 
+                            className={this.props.classes.buttonroot}
+                            disabled = {this.state.clear}
+                            variant="outlined">
+                                Clear
+                        </Button>
+                        {/* <button 
+                            name = 'clear'
+                            onClick = {this.handleClick}
+                            className = 'interface-button'
+                            disabled = {this.state.clear}
+                        >Clear
+                        </button>
+                        <br/> */}
+                    </div>  
                 </div>
                 <div>{added_component}</div>
             </div>
@@ -244,4 +346,4 @@ class App extends React.Component {
     }    
 }
 
-export default App;
+export default withStyles(styles)(App);

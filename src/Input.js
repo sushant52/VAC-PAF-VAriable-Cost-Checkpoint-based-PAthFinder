@@ -29,6 +29,7 @@ const styles = theme => createStyles({
       }
     },
     buttonroot: {
+        fontFamily: 'Kalam',
         borderRadius : '30px',
         marginTop:'-10px',
         borderWidth : '1px',
@@ -47,6 +48,7 @@ const styles = theme => createStyles({
         }
     },
     input: {
+        fontFamily: 'Kalam',
         boxSizing: 'border-box',
         color :'white',
         borderRadius : '30px',

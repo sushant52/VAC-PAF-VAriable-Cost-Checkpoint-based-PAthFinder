@@ -7,6 +7,7 @@ import classNames from 'classnames';
 
 const styles = theme => createStyles({
     textroot: {
+        fontFamily: 'Kalam',
       "& .MuiFormLabel-root": {
         color: "#ffffff",
         opacity : 0.5
@@ -30,6 +31,7 @@ const styles = theme => createStyles({
       }
     },
     buttonroot: {
+        fontFamily: 'Kalam',
         borderRadius : '30px',
         marginTop:'-10px',
         borderWidth : '1px',
@@ -48,6 +50,7 @@ const styles = theme => createStyles({
         }
     },
     input: {
+        fontFamily: 'Kalam',
         boxSizing: 'border-box',
         color :'white',
         borderRadius : '30px',
@@ -123,6 +126,9 @@ class Init extends React.Component {
                             InputProps = {{
                                 className : this.props.classes.input
                             }}
+                            InputLabelProps ={{
+                                className : this.props.classes.input
+                            }}
                             name='size' 
                             value={this.state.size} 
                             onChange={this.handleChange}
@@ -134,6 +140,9 @@ class Init extends React.Component {
                             <TextField
                             className={classNames(this.props.classes[`textroot`])}
                             InputProps = {{
+                                className : this.props.classes.input
+                            }}
+                            InputLabelProps ={{
                                 className : this.props.classes.input
                             }}
                             name='timer' 
