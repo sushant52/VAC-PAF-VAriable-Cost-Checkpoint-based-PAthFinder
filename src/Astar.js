@@ -34,8 +34,6 @@ const Algo = {
         start.visited = true;
         let heap = new binaryHeap(this.ss);
         heap.push(start);
-        console.log(start);
-        console.log(end);
         while(heap.len) {
             let cur_node = heap.pop();
             if(!cur_node.visited){

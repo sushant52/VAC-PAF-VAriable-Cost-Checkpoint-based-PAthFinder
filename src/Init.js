@@ -1,9 +1,8 @@
 import React from 'react';
-import App from './App';
+import Tutorial from './tutorial';
 import { withStyles, createStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import classNames from 'classnames';
 
 var height = window.innerHeight;
 var width = window.innerWidth;
@@ -125,7 +124,7 @@ class Init extends React.Component {
                         <div className='norm_text'>
                             <TextField
                             style={{top:'10px'}}
-                            className={classNames(this.props.classes[`textroot`])}
+                            className={this.props.classes.textroot}
                             InputProps = {{
                                 className : this.props.classes.input
                             }}
@@ -141,7 +140,7 @@ class Init extends React.Component {
                         </div>
                         <div className='norm_text'>
                             <TextField
-                            className={classNames(this.props.classes[`textroot`])}
+                            className={this.props.classes.textroot}
                             InputProps = {{
                                 className : this.props.classes.input
                             }}
@@ -157,7 +156,7 @@ class Init extends React.Component {
                         </div>
                         <div className='norm_text' >
                             <Button onClick={this.handleClick} 
-                            className={classNames(this.props.classes[`buttonroot`])}
+                            className={this.props.classes.buttonroot}
                             variant="outlined" 
                             color="primary">
                                 Start!
@@ -175,14 +174,14 @@ class Init extends React.Component {
                 </div>
             </div>
         )
-        let grid_gen = null;
+        let img_tutorial = null;
         if(this.state.ready)
-            grid_gen = (<App size = {parseInt(this.state.size)} timer= {parseInt(this.state.timer)} />)
+            img_tutorial = (<Tutorial size = {parseInt(this.state.size)} timer= {parseInt(this.state.timer)} />)
         
         return(
             <div>
                 {init_form}
-                {grid_gen}
+                {img_tutorial}
             </div>
         )
     }

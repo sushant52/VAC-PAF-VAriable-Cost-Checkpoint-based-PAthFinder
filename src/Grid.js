@@ -15,8 +15,6 @@ var chk2 = null;
 var chk3 = null;
 var hard_reset = true;
 var prev = new Node();
-console.log(height)
-console.log(width)
 
 class Gridin extends React.Component {
     constructor(props) {
@@ -28,7 +26,6 @@ class Gridin extends React.Component {
 
     Sketch = (p) => {
         var timer = this.props.timer;
-        console.log(timer);
         var size = this.props.size;
         var xl = Math.floor(width/size);
         var yl = Math.floor(height/size);
@@ -69,7 +66,6 @@ class Gridin extends React.Component {
                     p.rect(i*size,j*size,size,size);
                 }
             }
-            console.log(start,end,xl,yl,grid)
         }
 
         p.gridinit =  () => {
@@ -120,7 +116,6 @@ class Gridin extends React.Component {
         }
 
         p.endpath = () => {
-            console.log('Check1')
             clearTimeout(p.visualtimer)
             clearTimeout(p.linetimer)
             p.visualtimer = 0
@@ -380,6 +375,9 @@ class Gridin extends React.Component {
     }
 
     clr() {
+        chk1 = null
+        chk2 = null
+        chk3 = null
         this.props.clear()
     }
 

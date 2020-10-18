@@ -78,7 +78,7 @@ class App extends React.Component {
             pos4 : 0,
             start : false,
             end : true,
-            clear : true,
+            clear : false,
             action : 'none',
             newadd : false,
             value : "Wall",
@@ -181,7 +181,7 @@ class App extends React.Component {
             action : 'none',
             start : false,
             end : true,
-            clear : true
+            clear : false
         })
     }
 
@@ -189,6 +189,11 @@ class App extends React.Component {
         const {name, value, type, checked} = e.target
         e.stopPropagation();
         type === 'checkbox' ? this.setState(prevState => {return{[name] : !prevState.visualize}}): this.setState({value : value})
+    }
+
+    noClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
     }
 
     addBlock(toAdd,new_block) {
@@ -215,6 +220,10 @@ class App extends React.Component {
         if(this.state.newadd) {
             added_component = (<Input block_list={Object.keys(idx_manager)} block_add={this.addBlock} />)
         }
+        let mask = null
+        if(this.state.start) {
+            mask = (<div className='no-click' onMouseDown={this.noClick}></div>)
+        }
 
         return(
             <div>
@@ -229,6 +238,7 @@ class App extends React.Component {
                         timer = {this.props.timer}
                     />
                 </div>
+                {mask}
                 <div className='drag-ui'
                     ref = {this.selector}
                     onMouseDown = {this.onMouseDown}

@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles, createStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import classNames from 'classnames';
 
 const styles = theme => createStyles({
     textroot: {
@@ -63,7 +62,7 @@ class Input extends React.Component {
         this.state={
             colour : "#000000",
             name : '',
-            cost : '0',
+            cost : '',
             error : false
         }
         this.handleClick = this.handleClick.bind(this);
@@ -90,7 +89,6 @@ class Input extends React.Component {
         if(temp)return;
         this.props.block_list.forEach(element => {
             if(element == this.state.name.trim()) {
-                console.log('asdasdas')
                 this.setState({
                     colour : "#000000",
                     name : '',
@@ -150,8 +148,11 @@ class Input extends React.Component {
                         <div className='norm_text'>Color : Represent the new grid with a color of your choice</div>
                         <div className='norm_text' style={{marginTop:'2%'}}>
                             <TextField
-                            className={classNames(this.props.classes[`textroot`])}
+                            className={this.props.classes.textroot}
                             InputProps = {{
+                                className : this.props.classes.input
+                            }}
+                            InputLabelProps ={{
                                 className : this.props.classes.input
                             }}
                             name='name' 
@@ -163,8 +164,11 @@ class Input extends React.Component {
                         </div>
                         <div className='norm_text'>
                             <TextField
-                            className={classNames(this.props.classes[`textroot`])}
+                            className={this.props.classes.textroot}
                             InputProps = {{
+                                className : this.props.classes.input
+                            }}
+                            InputLabelProps ={{
                                 className : this.props.classes.input
                             }}
                             name='cost' 
@@ -189,7 +193,7 @@ class Input extends React.Component {
                         <div className='norm_text'>
                             <Button onClick={this.handleClick} 
                                 style={{width:'150%',height:'70%'}}
-                                className={classNames(this.props.classes[`buttonroot`])}
+                                className={this.props.classes.buttonroot}
                                 variant="outlined" 
                                 color="primary">
                                     Add This!
@@ -198,7 +202,7 @@ class Input extends React.Component {
                         <div className='norm_text'>
                             <Button onClick={this.skip} 
                                 style={{width:'150%',height:'70%'}}
-                                className={classNames(this.props.classes[`buttonroot`])}
+                                className={this.props.classes.buttonroot}
                                 variant="outlined" 
                                 color="primary">
                                     Skip!
