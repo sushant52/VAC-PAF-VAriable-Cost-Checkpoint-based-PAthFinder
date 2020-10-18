@@ -10,11 +10,11 @@ import Button from '@material-ui/core/Button';
 var idx_manager = {
     Start : 0,
     End : 1,
-    Gray : 2,
-    White : 3,
-    Chk1 : 4,
-    Chk2 : 5,
-    Chk3 : 6
+    Wall : 2,
+    Erase : 3,
+    Checkpoint1 : 4,
+    Checkpoint2 : 5,
+    Checkpoint3 : 6
 }
 var next_idx = 7;
 
@@ -81,16 +81,16 @@ class App extends React.Component {
             clear : true,
             action : 'none',
             newadd : false,
-            value : "Gray",
+            value : "Wall",
             visualize : true,
             valuelist : [
                 {Start : [1,[0,255,0]]},
                 {End : [1,[255,0,0]]},
-                {Gray : [0,[220,220,220]]},
-                {White : [1,[250,250,250]]},
-                {Chk1 : [1,[247,239,10]]},
-                {Chk2 : [1,[247,211,10]]},
-                {Chk3 : [1,[247,168,10]]}
+                {Wall : [0,[220,220,220]]},
+                {Erase : [1,[250,250,250]]},
+                {Checkpoint1 : [1,[247,239,10]]},
+                {Checkpoint2 : [1,[247,211,10]]},
+                {Checkpoint3 : [1,[247,168,10]]}
             ]
         }
         this.onStart = this.onStart.bind(this);
@@ -255,30 +255,13 @@ class App extends React.Component {
                             })}
                         </Select>
                         </FormControl>
-
-                        {/* <select 
-                        value={this.state.value}
-                        onChange = {this.handleChange}
-                        className = 'select-block'
-                        >
-                            {this.state.valuelist.map((block,idx) => {
-                                return(<option key={Object.keys(block)[0]}>{Object.keys(block)[0]}</option>)
-                            })}
-                        </select>
-                        <br/> */}
                         <Button 
                             name='addnew'
                             onClick={this.handleClick} 
                             className={this.props.classes.buttonroot}
                             variant="outlined">
-                                Addnew
+                                New Cell
                         </Button>
-                        {/* <button 
-                            name = 'addnew'
-                            onClick = {this.handleClick}
-                            className = 'interface-button'
-                        >Addnew
-                        </button> */}
                         <div style = {{
                             color : 'white',
                             marginTop : '10px'
@@ -298,14 +281,6 @@ class App extends React.Component {
                             variant="outlined">
                                 Start
                         </Button>
-                        {/* <button 
-                            name = 'start'
-                            onClick = {this.handleClick}
-                            className = 'interface-button'
-                            disabled = {this.state.start}
-                        >Start
-                        </button>
-                        <br/> */}
                         <Button 
                             name='end'
                             onClick={this.handleClick} 
@@ -314,14 +289,6 @@ class App extends React.Component {
                             variant="outlined">
                                 End
                         </Button>
-                        {/* <button 
-                            name = 'end'
-                            onClick = {this.handleClick}
-                            className = 'interface-button'
-                            disabled = {this.state.end}
-                        >End
-                        </button>
-                        <br/> */}
                         <Button 
                             name='clear'
                             onClick={this.handleClick} 
@@ -330,14 +297,6 @@ class App extends React.Component {
                             variant="outlined">
                                 Clear
                         </Button>
-                        {/* <button 
-                            name = 'clear'
-                            onClick = {this.handleClick}
-                            className = 'interface-button'
-                            disabled = {this.state.clear}
-                        >Clear
-                        </button>
-                        <br/> */}
                     </div>  
                 </div>
                 <div>{added_component}</div>

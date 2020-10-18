@@ -5,6 +5,9 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import classNames from 'classnames';
 
+var height = window.innerHeight;
+var width = window.innerWidth;
+
 const styles = theme => createStyles({
     textroot: {
         fontFamily: 'Kalam',
@@ -77,7 +80,7 @@ class Init extends React.Component {
 
     handleClick(e) {
         e.preventDefault();
-        if(this.state.size.trim()=='' || this.state.timer.trim()=='' || isNaN(this.state.size) || isNaN(this.state.timer)) {
+        if(this.state.size.trim()=='' || this.state.timer.trim()=='' || isNaN(this.state.size) || isNaN(this.state.timer) || parseInt(this.state.size)<5 || height/parseInt(this.state.size) < 1 || width/parseInt(this.state.size) < 2) {
             this.setState({
                 size : '',
                 timer : '',
@@ -98,7 +101,7 @@ class Init extends React.Component {
         let error_msg = null;
         if(this.state.error) {
             error_msg = (<div className='norm_text' style={{marginTop:'-15px', color:'red'}}>
-                Error : Please ensure that size is a minimum of 5 and maximum enough to generate atleast two grids.
+                Error : Please ensure that size is a minimum of 5 and enough to generate atleast two grids.
             </div>)
         }
         let init_form = null;

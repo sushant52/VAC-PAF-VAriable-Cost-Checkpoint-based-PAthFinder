@@ -6,6 +6,7 @@ import classNames from 'classnames';
 
 const styles = theme => createStyles({
     textroot: {
+        fontFamily: 'Kalam',
       "& .MuiFormLabel-root": {
         color: "#ffffff",
         opacity : 0.5
@@ -77,19 +78,29 @@ class Input extends React.Component {
     handleClick(e) {
         e.preventDefault();
         let temp = false;
+        if(this.state.name.trim()=='' || this.state.cost.trim()=='' || isNaN(this.state.cost.trim()) || parseInt(this.state.cost)==0 ) {
+            this.setState({
+                colour : "#000000",
+                name : '',
+                cost : '0',
+                error: true
+            });
+            temp = true;
+        }
+        if(temp)return;
         this.props.block_list.forEach(element => {
-            if(element==this.state.name) {
+            if(element == this.state.name.trim()) {
+                console.log('asdasdas')
                 this.setState({
                     colour : "#000000",
                     name : '',
                     cost : '0',
-                    error:true
+                    error: true
                 });
                 temp = true;
             }
         });
-        if(temp)
-            return;
+        if(temp)return;
         let new_block = {[this.state.name] : 
             [parseInt(this.state.cost),[
                 parseInt(this.state.colour.substring(1,3),16),
@@ -115,7 +126,7 @@ class Input extends React.Component {
         let error_msg = null;
         if(this.state.error) {
             error_msg = (<div className='norm_text' style={{marginTop:'-5px', color:'red'}}>
-            Error : Please ensure that name is unique and cost is greater than 0.
+            Error : Please ensure that name is unique and valid and cost is greater than 0.
         </div>)
         }
         return(
@@ -195,7 +206,6 @@ class Input extends React.Component {
                         </div>
                     </div>
                 </div>
-                
             </div>
         )
     }

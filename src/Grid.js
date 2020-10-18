@@ -13,7 +13,6 @@ var end;
 var chk1 = null;
 var chk2 = null;
 var chk3 = null;
-var exec = 0;
 var hard_reset = true;
 var prev = new Node();
 console.log(height)
@@ -29,6 +28,7 @@ class Gridin extends React.Component {
 
     Sketch = (p) => {
         var timer = this.props.timer;
+        console.log(timer);
         var size = this.props.size;
         var xl = Math.floor(width/size);
         var yl = Math.floor(height/size);
@@ -202,7 +202,7 @@ class Gridin extends React.Component {
                     p.rect(y*size,x*size,size,size);
                     break;
                 }
-                case "Chk1" : {
+                case "Checkpoint1" : {
                     if(chk1!=null) {
                         chk1.color = [250,250,250]
                         p.fill(chk1.color);
@@ -215,7 +215,7 @@ class Gridin extends React.Component {
                     p.rect(y*size,x*size,size,size);
                     break;
                 }
-                case "Chk2" : {
+                case "Checkpoint2" : {
                     if(chk2!=null) {
                         chk2.color = [250,250,250]
                         p.fill(chk2.color);
@@ -228,7 +228,7 @@ class Gridin extends React.Component {
                     p.rect(y*size,x*size,size,size);
                     break;
                 }
-                case "Chk3" : {
+                case "Checkpoint3" : {
                     if(chk3!=null) {
                         chk3.color = [250,250,250]
                         p.fill(chk3.color);
@@ -290,7 +290,7 @@ class Gridin extends React.Component {
                     p.rect(y*size,x*size,size,size);
                     break;
                 }
-                case "Chk1" : {
+                case "Checkpoint1" : {
                     if(chk1!=null) {
                         chk1.color = [250,250,250]
                         p.fill(chk1.color);
@@ -303,7 +303,7 @@ class Gridin extends React.Component {
                     p.rect(y*size,x*size,size,size);
                     break;
                 }
-                case "Chk2" : {
+                case "Checkpoint2" : {
                     if(chk2!=null) {
                         chk2.color = [250,250,250]
                         p.fill(chk2.color);
@@ -316,7 +316,7 @@ class Gridin extends React.Component {
                     p.rect(y*size,x*size,size,size);
                     break;
                 }
-                case "Chk3" : {
+                case "Checkpoint3" : {
                     if(chk3!=null) {
                         chk3.color = [250,250,250]
                         p.fill(chk3.color);
@@ -367,12 +367,10 @@ class Gridin extends React.Component {
         }
         else if(this.props.action!=prevProps.action && this.props.action === 'end'){
             this.myp5.endpath()
-            console.log('Cleanup')
             this.chng()
         } else if(this.props.action!=prevProps.action && this.props.action === 'clear'){
             hard_reset = true
             this.myp5.endpath()
-            console.log('Clear')
             this.clr()
         }
     }
