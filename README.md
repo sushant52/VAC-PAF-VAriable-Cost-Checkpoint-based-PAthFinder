@@ -1,4 +1,4 @@
-# 📈 VACC-PAF : VAriable Cost Checkpoint based PAthFinder
+## 📈 VACC-PAF : VAriable Cost Checkpoint based PAthFinder
 ---
 ### 📃 About
 **VACC-PAF** is a PathFinder sandbox which uses A* graph algorithm to find shortest path between two points. 
