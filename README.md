@@ -19,12 +19,13 @@ Here's how :-
 ### 🖥️Run on your local device
 Simply run
 ```bash
+npm install
 npm start
 ```
 on the terminal to run the project on your local machine.
 
 ### 🔮 Future Ideas
-* Currently, the application works on PC only. Support for mobile devices is a major goal currently.
+* Currently, the application works on PC only. Support for mobile devices is a major goal.
 * Currently, the pathfinder works on A* graph algorithm only. In future, multiple algorithms such as dfs and Dijkstra Algorithms can be implemented.
 * More user control can be provided by adding the options of using various heuristics in A* algorithm and adding option to disable diagonal movement in the path.
 
