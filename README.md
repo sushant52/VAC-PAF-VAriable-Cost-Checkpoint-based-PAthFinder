@@ -2,7 +2,8 @@
 ***
 ### 📃 About
 **VACC-PAF** is a PathFinder sandbox which uses A* graph algorithm to find shortest path between two points. 
-It allows user to create their own grid full of hurdles and obstacles of their wish, through which the algorithm works to find a path. Many unique functionalities such as custom weighted cells and checkpoints are also provided to the user. This project is built using ReactJS and p5.js libraries. [Visit the website](https://sushant52.github.io/VAC-PAF-VAriable-Cost-Checkpoint-based-PAthFinder/) to play around with the sandbox. Look at the PathFinder in action with some mud cells and 2 checkpoints!
+It allows user to create their own grid full of hurdles and obstacles of their wish, through which the algorithm works to find a path. Many unique functionalities such as custom weighted cells and checkpoints are also provided to the user. This project is built using ReactJS and p5.js libraries. [Visit the website](https://sushant52.github.io/VAC-PAF-VAriable-Cost-Checkpoint-based-PAthFinder/) to play around with the sandbox. 
+Have a look at the PathFinder in action with some mud cells and 2 checkpoints, below!
 
 ![ExampleGIF](https://media.giphy.com/media/BmZNxzUNv4DH1rOolC/giphy.gif)
 
