@@ -1,1 +1,1 @@
-# VAC-PAF : VAriable Cost Checkpoint based PAthFinder
+# VACC-PAF : VAriable Cost Checkpoint based PAthFinder
