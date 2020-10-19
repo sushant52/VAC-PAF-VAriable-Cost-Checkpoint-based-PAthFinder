@@ -167,7 +167,7 @@ class Init extends React.Component {
                     </div>
                     <div className='footer'> 
                         Take a peek at the source code by <a style={{color:'white'}}
-                        href='https://github.com/sushant52/VAC-PAF-VAriable-Cost-Checkpoint-based-PAthFinder-'>
+                        href='https://github.com/sushant52/VAC-PAF-VAriable-Cost-Checkpoint-based-PAthFinder'>
                          sushant52 </a>
                     </div>
                     
