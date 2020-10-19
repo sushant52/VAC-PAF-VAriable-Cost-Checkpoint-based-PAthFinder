@@ -141,6 +141,11 @@ class Gridin extends React.Component {
 
         p.pathdraw = async (path) => {
             let n = path.length
+            console.log(n)
+            if(n==0) {
+                alert('No path found')
+                return;
+            }
             for(let i = 0;i<n;++i) {
                 let n1 = path[i].length
                 await p.linedraw(path[i],n1)
@@ -155,6 +160,10 @@ class Gridin extends React.Component {
                 p.stroke(220);
                 p.strokeWeight(1);
                 let path = Algo.astar(arr[i], arr[i+1], grid_clone, yl-1,xl-1);
+                if(path.length==0) {
+                    alert('Error : All paths are blocked')
+                    return;
+                }
                 if(this.props.visualize) {
                     let n = path[0].length
                     await p.drawpath(path[0],n)
